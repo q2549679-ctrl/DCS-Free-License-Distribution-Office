@@ -122,34 +122,6 @@
           </div>
         </div>
 
-        <!-- 清除全部确认弹窗 -->
-        <div class="modal-overlay" :class="{ show: openResetConfirm }" @click="openResetConfirm = false">
-          <div class="modal" @click.stop>
-            <div class="modal-header">
-              <div class="modal-title">危险操作：清除全部应用数据</div>
-              <button class="modal-close" @click="openResetConfirm = false">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-            </div>
-            <div class="modal-body">
-              <p style="color:var(--danger);font-weight:bold">确定要清除全部数据吗？</p>
-              <p>1. 所有已添加邮箱账号全部删除</p>
-              <p>2. 全部试用资产记录清空</p>
-              <p>3. 头像、用户名、主题设置全部恢复默认</p>
-              <p><strong>此操作无法撤销！</strong></p>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-secondary" @click="openResetConfirm = false">取消</button>
-              <button class="btn btn-primary" style="background-color:#ef4444;border-color:#ef4444"
-                @click="handleResetAll">确认清除全部</button>
-            </div>
-          </div>
-        </div>
-
-
         <!-- 关于 -->
         <div class="settings-section active" v-if="activeSection === 'about'">
           <div class="settings-group">
