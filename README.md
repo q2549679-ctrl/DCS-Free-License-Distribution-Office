@@ -1,2 +1,165 @@
-# DCS-Free-License-Distribution-Office
-DCS-FLDO是一款专为 DCS World 飞行模拟玩家设计的长期试用账号与模组资产全生命周期管理桌面端软件
+DCS 白嫖许可证发放处 (DCS Free-License Distribution Office)
+
+现代化、轻量级的 DCS World 试用账号与全模组资产时效管理桌面应用
+
+📖 项目简介
+
+DCS 白嫖许可证发放处（DCS-FLDO） 是一款专为 DCS World 飞行模拟玩家设计的长期试用账号与模组资产全生命周期管理桌面端软件。应用基于 Electron + Vue 3 + TypeScript 架构开发，全面整合了临时邮箱探活握手、原生 TOTP 双因素认证（2FA）、DCS 官方 50+ 款模组分类追踪、邮件实时接收与中英双语智能翻译，以及本地数据热备份与安全清理等全套功能。
+
+✨ 核心特性
+
+1. 📊 总览仪表盘 (Dashboard)
+
+实时全局指标：直观汇总已管理邮箱总数、当前选中邮箱名下的活跃试用资产数、已绑定 2FA 的账号数及近期到期预警数。
+
+双维度时效监控：
+
+邮箱冷却追踪：针对 DCS 180 天账号试用冷却期进行自动倒计时。
+
+资产到期预警：对 14 天试用期剩余不足 7 天（黄色预警）与不足 3 天（红色紧急）的资产进行动态高亮提示并支持一键跳转。
+
+自动化审计流水：自动记录系统对全量资产状态的周期性检查与关键用户操作日志。
+
+2. 📬 长期邮箱与 2FA 凭据管理 (Emails)
+
+快速注册与探活：支持一键生成随机前缀，提供 @sharklasers.com 与 @grr.la 等公共邮箱后缀；在保存前自动发起底层网络探活握手。
+
+DCS 凭据保险箱：支持登录密码的明文掩码一键切换、内联修改与快捷剪贴板复制。
+
+原生 TOTP 2FA 引擎：基于 Node.js 原生 crypto 算法自主实现 Base32 解码与 HMAC-SHA1 动态码生成，提供 30 秒动态环状倒计时与实时刷新，无需依赖外部第三方库。
+
+状态自动化流转：系统自动研判账号状态（可用 available / 使用中 inuse / 冷却中 cooling）。
+
+3. ✈️ 试用资产全景库 (Assets)
+
+官方全量模组覆盖：内置收录喷气式飞机（23款）、直升机（7款）、螺旋桨战机（10款）、地图（11款）、装备包（3款）与导航系统（1款）共计 50 余款 DCS 官方资产。
+
+14 天体验周期管理：支持一键标记试用激活、环形进度百分比可视化以及官方商店页面快速直达。
+
+多账号资产隔离：各邮箱账号名下的资产激活记录与到期时间独立运算、互不干扰。
+
+激活卡片反转动效：激活状态下的资产卡片自动呈现高对比度深色面板，便于快速检索未试用模组。
+
+4. ✉️ 邮件中心与智能翻译 (Mail Center)
+
+异步拉取与验证识别：实时获取指定邮箱的收件箱列表与邮件正文，自动识别并打上 digitalcombatsimulator 官方系统验证标记。
+
+三模式智能翻译：支持“原文展示”、“纯中文翻译”与“双语分栏对比”三种模式自由切换，内置本地会话翻译缓存以优化网络开销。
+
+安全沙盒拦截：邮件内的所有超链接点击均会被拦截，并强制调用系统原生默认浏览器外部打开。
+
+5. ⚙️ 系统设置与数据管理 (Settings)
+
+视觉与主题偏好：支持浅色模式、深色模式及跟随系统主题，提供 3 档毛玻璃模糊透明度调节与全局主色调拾色器。
+
+自定义个人配置：支持双击上传本地图片作为头像（Base64 存储）与即时修改飞行员代号。
+
+数据热备份与还原：支持将当前 SQLite 数据库热导出至自定义路径，或从外部备份 .db 文件无缝恢复。
+
+一键出厂级清理：提供物理级数据库 DELETE 与 VACUUM 磁盘碎片整理，支持一键清空数据并恢复默认配置。
+
+🛠️ 技术架构
+
+层级
+
+技术选型
+
+说明
+
+桌面运行时
+
+Electron 44+
+
+启用 contextIsolation 安全沙盒，主进程与渲染进程严格通过 IPC 隔离通信
+
+前端框架
+
+Vue 3 + TypeScript
+
+全量 <script setup> 组合式 API (Composition API) 开发
+
+构建系统
+
+Vite 8 + vite-plugin-electron
+
+高速 ESM 开发服务与 Rollup 生产优化构建
+
+全局状态
+
+Pinia + LocalStorage
+
+响应式状态管理及用户个性化配置持久化
+
+本地数据库
+
+SQLite 3 (better-sqlite3)
+
+高性能同步 C++ 原生 SQLite 驱动，数据保存在本地独立 DB 文件
+
+极致轻量化
+
+原生能力替代
+
+移除 axios/otplib/persistedstate 等冗余依赖，改用原生 crypto 与 net.fetch
+
+📁 目录结构
+
+dcs-trial-manager/
+├── electron/
+│   ├── main.ts              # Electron 主进程 (窗口管理、IPC 注册、SQLite CRUD、TOTP 原生计算)
+│   └── preload.ts           # 预加载脚本 (安全暴露 window.electronAPI 桥接接口)
+├── ico/
+│   └── DCS-FlDO.ico         # 应用程序窗口、任务栏及 EXE 构建图标
+├── src/
+│   ├── assets/
+│   │   └── style.css        # 全局设计规范、毛玻璃主题及动效样式
+│   ├── store/
+│   │   └── index.ts         # Pinia 全局状态、本地持久化与时效自动计算
+│   ├── views/
+│   │   ├── Dashboard.vue    # 总览仪表盘视图
+│   │   ├── Emails.vue       # 试用邮箱与 2FA 管理视图
+│   │   ├── Assets.vue       # 试用资产分类与时效视图
+│   │   ├── Mail.vue         # 邮件中心与双语翻译视图
+│   │   └── Settings.vue     # 系统设置与数据备份视图
+│   ├── App.vue              # 顶层布局、自定义无边框标题栏与全局侧边栏
+│   └── main.ts              # Vue 渲染进程入口
+├── package.json             # 依赖声明与 electron-builder 打包配置
+├── tsconfig.json            # TypeScript 编译配置
+└── vite.config.ts           # Vite + Electron 编译构建配置
+
+🚀 快速上手
+1. 环境准备
+安装 Node.js (推荐 LTS 18.0.0 或更高版本)
+
+包管理工具：npm / yarn / pnpm
+
+2. 获取代码与安装依赖
+Bash
+# 进入项目目录
+cd dcs-trial-manager
+
+# 安装依赖
+npm install
+💡 原生模块重建提示 (Windows)：
+
+若启动时遇到 better-sqlite3 与 Electron 的 ABI 版本不匹配问题，请在终端执行：
+
+Bash
+> npx @electron/rebuild -f -w better-sqlite3
+> 
+3. 启动开发模式
+Bash
+npm run dev
+启动后 Vite 会自动编译前端并调起透明无边框的桌面窗口。
+
+4. 生产打包构建
+Bash
+npm run app:build
+执行完毕后，electron-builder 会采用最大压缩率在 release/ 目录下生成独立的 Windows 安装包与免安装可执行程序。
+
+🔒 隐私与安全性
+1.零数据上报：除用户主动发起的邮箱验证、邮件收取及谷歌公共翻译接口调用外，应用不收集、不上报、不出境传输任何用户的操作记录。
+
+2.纯离线本地存储：所有邮箱、密码及 2FA 密钥均仅保存在本地用户目录下的 app.db 文件中（路径位于 %APPDATA%/dcs-trial-manager/data/app.db）。
+
+3.定期备份建议：请妥善使用“系统设置”中的“立即备份”功能导出备份文件，防止操作系统重装导致凭据丢失。
