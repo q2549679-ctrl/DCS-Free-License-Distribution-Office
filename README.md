@@ -7,7 +7,7 @@
 ### 2. 获取代码与安装依赖
 ```bash
 # 进入项目目录
-cd dcs-trial-manager
+cd DCS Free-License Distribution Office
 
 # 安装依赖
 npm install
